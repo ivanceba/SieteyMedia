@@ -9,7 +9,7 @@ require_once 'MachinePlayer.php';
 /**
  * Class Controller
  *
- * Hold communication with user and models.
+ * Hold communication between user and models.
  *
  * @author Ivan Ceballos Vega
  */
