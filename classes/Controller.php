@@ -5,7 +5,6 @@ require_once 'Player.php';
 require_once 'Memory.php';
 require_once 'MachinePlayer.php';
 
-
 /**
  * Class Controller
  *
@@ -15,9 +14,6 @@ require_once 'MachinePlayer.php';
  */
 class Controller
 {
-    const PLAYER_NAME = "Humano";
-    const MACHINE_NAME = "Máquina";
-
     private static $instance;
     private $memory;
     private $human;
@@ -64,8 +60,8 @@ class Controller
      */
     private function __construct()
     {
-        $this->human = new Player(self::PLAYER_NAME);
-        $this->machine = new MachinePlayer(self::MACHINE_NAME, $this->human);
+        $this->human = new Player();
+        $this->machine = new MachinePlayer($this->human);
         $this->memory = new Memory();
     }
 
@@ -90,14 +86,20 @@ class Controller
         }
     }
 
+    /**
+     * Holds the game dynamic for human player.
+     */
     private function playHuman()
     {
         do {
             echo "Jugador Humano pide carta.\n";
+
             $card = new Card($this->memory);
             $this->human->receiveCard($card);
             $this->memory->add($card);
-            echo "\tHas sacado " . $card . ". LLevas " . $this->human->getPoints() . " puntos. ";
+            $points = $this->human->getPoints();
+
+            echo "\tHas sacado " . $card . '. LLevas ' . $points . ' punto' . ($points > 1 ? 's' : '') . '.';
 
             if ($this->human->isOver())
                 echo "\n";
@@ -115,16 +117,20 @@ class Controller
         } while (!$this->human->isOver());
     }
 
+    /**
+     * Holds the game dynamic for machine player.
+     */
     private function playMachine()
     {
-
         do {
             echo "Jugador Maquina pide carta.\n";
+
             $card = new Card($this->memory);
-
             $this->machine->receiveCard($card);
+            $this->memory->add($card);
+            $points = $this->machine->getPoints();
 
-            echo "\tHas sacado " . $card . ". LLeva " . $this->machine->getPoints() . " puntos. \n";
+            echo "\tHa sacado " . $card . '. LLeva ' . $points . ' punto' . $points > 1 ? 's' : '' . "\n";
 
         } while ($this->machine->willContinue($this->memory) && !$this->machine->isOver());
 
@@ -133,12 +139,20 @@ class Controller
 
     }
 
+    /**
+     * Prints into screen who won the game.
+     */
     private function decideVictory()
     {
-        if ($this->human->isOver() || (!$this->machine->isOver() && $this->machine->getPoints() >= $this->human->getPoints()))
-            echo 'Jugador Máquina';
-        else
-            echo 'Jugador Humano';
+        echo 'Jugador ';
+        if (!$this->human->isOver() &&
+            (
+                ($this->human->getPoints() == $this->machine->getPoints() && $this->human->getPoints() != PLAYER_WIN_POINTS)
+                || $this->human->getPoints() > $this->machine->getPoints()
+                || $this->machine->isOver()
+            )
+        ) echo 'Humano';
+        else echo 'Máquina';
         echo ' gana la partida. ';
     }
 }

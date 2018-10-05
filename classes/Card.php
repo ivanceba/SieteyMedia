@@ -27,13 +27,21 @@ class Card
         } while ($memory->exists($this));
     }
 
+    /**
+     * Compares two cards and indicates if both content are equal.
+     *
+     * @param Card $card caro to compare.
+     * @return bool true if equal; false otherwise.
+     */
     public function equals(Card $card)
     {
         return $this->number == $card->number && $this->suit == $card->suit;
     }
 
     /**
-     * @return mixed
+     * Get the number of the card.
+     *
+     * @return int
      */
     public function getNumber()
     {
@@ -41,18 +49,30 @@ class Card
     }
 
     /**
-     * @return mixed
+     * Get the suit of the card.
+     *
+     * @return int
      */
     public function getSuit()
     {
         return $this->suit;
     }
 
+    /**
+     * Calculate the points of the card.
+     *
+     * @return float|int
+     */
     public function calculatePoints()
     {
         return ($this->number > 6) ? 0.5 : $this->number + 1;
     }
 
+    /**
+     * Gives a string representation of a card.
+     *
+     * @return string
+     */
     public function __toString()
     {
         switch ($this->number) {

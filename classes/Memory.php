@@ -14,6 +14,9 @@ class Memory
     // List that holds all the cards displayed.
     private $list = null;
 
+    /**
+     * Memory constructor.
+     */
     public function __construct()
     {
         $this->list = array_fill(0, 10, array_fill(0, 4, false));
@@ -41,24 +44,25 @@ class Memory
             $this->list[$card->getNumber()][$card->getSuit()] = true;
     }
 
+    /**
+     * Resets the memory.
+     */
     public function reset()
     {
         $this->list = array_fill(0, 10, array_fill(0, 4, false));
     }
 
-    public function test()
-    {
-        for ($i = 0; $i < 10; $i++)
-            $this->add(new Card($this));
-
-        $cardsNotDisplayed = $this->getCardsNotDisplayed();
-    }
-
+    /**
+     * Get the cards that has not been displayed.
+     * The format is an array of numbers with the sum of cards not displayed.
+     *
+     * @return array
+     */
     public function getCardsNotDisplayed()
     {
         $response = [];
-
-        for ($i = 0; $i < count($this->list); $i++)
+        $numElements = count($this->list);
+        for ($i = 0; $i < $numElements; $i++)
             $response[] = 4 - array_sum($this->list[$i]);
 
         return $response;

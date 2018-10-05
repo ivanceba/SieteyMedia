@@ -1,7 +1,9 @@
 <?php
 
+include_once "Card.php";
+
 // Constants
-define("PLAYER_WON_POINTS", 7.5);
+define("PLAYER_WIN_POINTS", 7.5);
 
 /**
  * Class Player
@@ -13,36 +15,40 @@ define("PLAYER_WON_POINTS", 7.5);
 class Player
 {
     protected $points = 0;
-    private $name;
 
-    public function __construct($name)
-    {
-        $this->name = $name;
+    /**
+     * Indicates if a player is over.
+     *
+     * @return bool true if over; false otherwise.
+     */
+    public function isOver() {
+        return $this->points > PLAYER_WIN_POINTS;
     }
 
     /**
-     * @return string
+     * Get the points of the player.
+     *
+     * @return int
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function isOver() {
-        return $this->points > PLAYER_WON_POINTS;
-    }
-
     public function getPoints()
     {
         return $this->points;
     }
 
+    /**
+     * Get the card and add points.
+     *
+     * @param Card $card
+     */
     public function receiveCard(Card $card)
     {
         $this->points += $card->calculatePoints();
 
     }
 
+    /**
+     * Resets the player data.
+     */
     public function reset()
     {
         $this->points = 0;
